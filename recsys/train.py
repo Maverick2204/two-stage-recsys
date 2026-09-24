@@ -8,7 +8,6 @@ The T2 model is what gets served.
 """
 import json
 import os
-import subprocess
 import time
 import zipfile
 
@@ -31,13 +30,22 @@ EPOCH0 = pd.Timestamp("2018-01-01")
 
 
 def download():
+    """Needs ~/.kaggle/kaggle.json and the competition rules accepted on kaggle.com."""
+    from kaggle.api.kaggle_api_extended import KaggleApi
+    api = KaggleApi()
+    api.authenticate()
     os.makedirs(DATA, exist_ok=True)
     for f in ("transactions_train.csv", "customers.csv", "articles.csv"):
         if not os.path.exists(f"{DATA}/{f}"):
-            subprocess.run(["kaggle", "competitions", "download", "-c", "h-and-m-personalized-fashion-recommendations",
-                            "-f", f, "-p", DATA], check=True)
-            zipfile.ZipFile(f"{DATA}/{f}.zip").extractall(DATA)
-            os.remove(f"{DATA}/{f}.zip")
+            print(f"downloading {f}", flush=True)
+            api.competition_download_file("h-and-m-personalized-fashion-recommendations", f, path=DATA, quiet=True)
+        for z in (f"{DATA}/{f}.zip", f"{DATA}/{f}"):  # Kaggle may save the zip under either name
+            if os.path.exists(z) and zipfile.is_zipfile(z):
+                with zipfile.ZipFile(z) as zf:
+                    zf.extract(f, f"{DATA}/tmp")
+                os.replace(f"{DATA}/tmp/{f}", f"{DATA}/{f}")
+                if z.endswith(".zip"):
+                    os.remove(z)
 
 
 def load():

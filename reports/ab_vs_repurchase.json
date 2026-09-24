@@ -1,0 +1,55 @@
+{
+  "label": "OFFLINE REPLAY on logged test-window data, not production lift",
+  "metric": "ndcg10",
+  "control": "repurchase_pop",
+  "treatment": "two_stage",
+  "n_control": 34532,
+  "n_treatment": 34452,
+  "control_mean": 0.03376842606992297,
+  "covariates": [
+    "pre_log_n_window",
+    "pre_n_4w",
+    "pre_n_val",
+    "pre_hits_ctrl"
+  ],
+  "raw": {
+    "diff": 0.011895018821675624,
+    "ci95": [
+      0.009702661317736295,
+      0.014087376325614952
+    ],
+    "rel_lift": 0.352252687082456,
+    "rel_ci95": [
+      0.2873293915933592,
+      0.41717598257155275
+    ]
+  },
+  "cuped": {
+    "diff": 0.011981350682682232,
+    "ci95": [
+      0.009828480617570946,
+      0.014134220747793518
+    ],
+    "rel_lift": 0.35480927236208504,
+    "rel_ci95": [
+      0.29105533663960215,
+      0.418563208084568
+    ]
+  },
+  "variance_reduction": 0.03562339685470339,
+  "se_raw": 0.0011185497469078207,
+  "se_cuped": 0.001098403094444534,
+  "paired_all_users": {
+    "diff": 0.011023916318144443,
+    "ci95": [
+      0.010263496923674266,
+      0.01178433571261462
+    ],
+    "rel_lift": 0.3193668006316571,
+    "rel_ci95": [
+      0.29733717865870296,
+      0.3413964226046112
+    ]
+  },
+  "aa_false_positive_rate": 0.041
+}

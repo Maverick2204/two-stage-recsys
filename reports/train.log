@@ -1,0 +1,51 @@
+31,788,324 transactions total | window: train 8,001,751 val 255,241 test 240,311 | val week 2020-09-09, test week 2020-09-16..2020-09-22
+[T1] two-tower on train
+  epoch 1/3 loss 7.407 (258s)
+  epoch 2/3 loss 7.169 (275s)
+  epoch 3/3 loss 7.089 (280s)
+[T1] LightGBM lambdarank on val-week labels
+  ranker rows: train 1,102,700 (11,027 users with a positive), holdout 282,500
+  best iteration 110
+[T2] two-tower refit on train+val
+  epoch 1/3 loss 7.397 (269s)
+  epoch 2/3 loss 7.161 (277s)
+  epoch 3/3 loss 7.079 (265s)
+[T2] evaluated 68,984 test users in 54s
+{
+ "popular": {
+  "ndcg10": 0.01449,
+  "hits10": 0.05856,
+  "recall10": 0.02221,
+  "recall50": 0.07294,
+  "recall100": 0.11812
+ },
+ "repurchase_pop": {
+  "ndcg10": 0.03452,
+  "hits10": 0.10149,
+  "recall10": 0.04615,
+  "recall50": 0.10075,
+  "recall100": 0.14365
+ },
+ "two_tower": {
+  "ndcg10": 0.02362,
+  "hits10": 0.08286,
+  "recall10": 0.03404,
+  "recall50": 0.07985,
+  "recall100": 0.11388
+ },
+ "candidates": {
+  "ndcg10": 0.03314,
+  "hits10": 0.09663,
+  "recall10": 0.04377,
+  "recall50": 0.09148,
+  "recall100": 0.12474
+ },
+ "two_stage": {
+  "ndcg10": 0.04554,
+  "hits10": 0.14731,
+  "recall10": 0.0623,
+  "recall50": 0.10885,
+  "recall100": 0.12474
+ }
+}
+done in 1738.6s
