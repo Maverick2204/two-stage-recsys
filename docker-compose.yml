@@ -1,0 +1,12 @@
+services:
+  api:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      WORKERS: "4"
+    depends_on: [redis]
+  redis:
+    image: docker.io/library/redis:7-alpine
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --save ""
+    ports: ["6379:6379"]

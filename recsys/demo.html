@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two-stage recommender demo</title>
+<style>
+  :root { --bg: #fafaf9; --fg: #1c1917; --muted: #78716c; --line: #e7e5e4; --accent: #2563eb; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #1c1917; --fg: #f5f5f4; --muted: #a8a29e; --line: #44403c; --accent: #60a5fa; } }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 32px 16px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  p { color: var(--muted); margin: 0 0 24px; }
+  form { display: flex; gap: 8px; flex-wrap: wrap; }
+  input { flex: 1 1 200px; min-width: 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: inherit; font: inherit; }
+  button { padding: 10px 14px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; font: inherit; cursor: pointer; }
+  button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+  #meta { color: var(--muted); font-size: .9rem; margin: 20px 0 8px; min-height: 1.5em; }
+  ol { padding-left: 1.4em; margin: 0; }
+  li { padding: 8px 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+  li small { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Two-stage recommender</h1>
+  <p>Two-tower retrieval (FAISS) → LightGBM ranker, served by FastAPI with a Redis cache. Trained on H&amp;M purchases; unknown customers get last week's best sellers.</p>
+  <form id="f">
+    <label for="uid" hidden>Customer id</label>
+    <input id="uid" placeholder="customer id" autocomplete="off" required>
+    <button>Recommend</button>
+    <button type="button" class="secondary" id="rand">Random customer</button>
+  </form>
+  <div id="meta" aria-live="polite"></div>
+  <ol id="out"></ol>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+async function go(uid) {
+  const t = performance.now();
+  const r = await fetch(`recommend/${encodeURIComponent(uid)}?k=10`);
+  if (!r.ok) { $("meta").textContent = `Error ${r.status}`; return; }
+  const d = await r.json();
+  $("meta").textContent = `${d.strategy}${d.cached ? " · cached" : ""} · ${Math.round(performance.now() - t)} ms round trip`;
+  $("out").replaceChildren(...d.items.map(it => {
+    const li = document.createElement("li");
+    li.textContent = it.title + " ";
+    const s = document.createElement("small"); s.textContent = `#${it.article_id}`; li.append(s);
+    return li;
+  }));
+}
+$("f").onsubmit = e => { e.preventDefault(); go($("uid").value.trim()); };
+$("rand").onclick = async () => { const [u] = await (await fetch("users/sample?n=1")).json(); $("uid").value = u; go(u); };
+</script>
+</body>
+</html>
