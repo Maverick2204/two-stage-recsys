@@ -31,12 +31,12 @@ EPOCH0 = pd.Timestamp("2018-01-01")
 
 def download():
     """Needs ~/.kaggle/kaggle.json and the competition rules accepted on kaggle.com."""
-    from kaggle.api.kaggle_api_extended import KaggleApi
-    api = KaggleApi()
-    api.authenticate()
     os.makedirs(DATA, exist_ok=True)
     for f in ("transactions_train.csv", "customers.csv", "articles.csv"):
         if not os.path.exists(f"{DATA}/{f}"):
+            from kaggle.api.kaggle_api_extended import KaggleApi  # authenticates on import, so only when needed
+            api = KaggleApi()
+            api.authenticate()
             print(f"downloading {f}", flush=True)
             api.competition_download_file("h-and-m-personalized-fashion-recommendations", f, path=DATA, quiet=True)
         for z in (f"{DATA}/{f}.zip", f"{DATA}/{f}"):  # Kaggle may save the zip under either name
