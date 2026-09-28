@@ -1,5 +1,7 @@
 # Two-stage recommender: retrieval + ranking on H&M
 
+**Live demo: https://hm-two-stage-recsys-latest.onrender.com/** (free tier: it sleeps after ~15 min idle, so the first load can take 30-60 s while it wakes up.)
+
 **The problem.** A fashion retailer has about 105k live articles and 1.4M customers, and each customer sees 10 slots in a "Recommended for you" row. Many retailers fill that row with last week's best sellers. It's the same 10 items for everyone, it ignores what each customer already buys, and it can't surface the long tail. This project ranks articles per customer to predict what they will buy **next week**, and serves the result fast enough for a page render (p95 under 20 ms on the full model path).
 
 **What I report.** Everything is evaluated on a strict *future* week that the models never see. Each stage is compared against popularity and a stronger heuristic baseline. There is an error analysis of where it fails, measured latency and throughput, and an offline A/B analysis with CUPED. That A/B analysis is clearly labelled as **offline replay, not production lift**.
@@ -119,6 +121,6 @@ I started on MovieLens-1M ([reports/movielens-1m/](reports/movielens-1m/)). On a
 - Widen the candidate pool (more best-seller and co-purchase slots). Stage 1 recall is the main ceiling right now.
 - Add image or text article embeddings for the cold-item problem.
 - Evaluate on several consecutive weeks (a rolling backtest), not a single test week.
-- [ ] Public demo (Hugging Face Spaces).
+- [x] Public demo (Render free tier, image on GHCR).
 
 Data: [H&M Personalized Fashion Recommendations](https://www.kaggle.com/competitions/h-and-m-personalized-fashion-recommendations) (Kaggle, non-commercial use). Raw data and trained artifacts are not committed.
